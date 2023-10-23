@@ -1,0 +1,12 @@
+{
+  "name": "com.GameGC.Collections",
+  "displayName": "Animation Rigging",
+  "version": "1.0.0",
+  "description": "Serializable c# Collections",
+  "author" : {
+    "name": "GameGC"
+  },
+  "dependencies": {
+    "com.unity.modules.imgui": "1.0.0"
+  }
+}
