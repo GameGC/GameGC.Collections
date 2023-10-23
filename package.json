@@ -1,7 +1,7 @@
 {
   "name": "com.gamegc.collections",
   "displayName": "Collections",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Serializable c# Collections",
   "author" : {
     "name": "GameGC"
