@@ -4,7 +4,7 @@ using UnityEngine;
 namespace GameGC.Collections
 {
   [Serializable]
-  public struct SNullable<T> :ISerializationCallbackReceiver where T : struct
+  public class SNullable<T> :ISerializationCallbackReceiver where T : struct
   {
     [SerializeField] private T value;
 
