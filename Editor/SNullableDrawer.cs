@@ -19,11 +19,7 @@ namespace GameGC.Collections.Editor
             EditorGUI.PropertyField(position,valueProperty , label, true);
             if (EditorGUI.EndChangeCheck())
             {
-                property.NextVisible(true);
-                Debug.Log(property.name);
-                property.NextVisible(false);
-                Debug.Log(property.name);
-                property.FindPropertyRelative("<HasValue>k_BackingField").boolValue = true;
+                property.FindPropertyRelative("<HasValue>k__BackingField").boolValue = true;
             }
 
             valueProperty.serializedObject.ApplyModifiedProperties();
