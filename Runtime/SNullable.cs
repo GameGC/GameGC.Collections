@@ -4,7 +4,7 @@ using UnityEngine;
 namespace GameGC.Collections
 {
   [Serializable]
-  public struct SNullable<T> where T : struct
+  public struct SNullable<T> :ISerializationCallbackReceiver where T : struct
   {
     [SerializeField] private T value;
 
@@ -14,7 +14,7 @@ namespace GameGC.Collections
       HasValue = true;
     }
 
-    [field:SerializeField,HideInInspector]public bool HasValue { get; private set; }
+    [field:SerializeField]public bool HasValue { get; private set; }
 
     public T Value
     {
@@ -24,6 +24,17 @@ namespace GameGC.Collections
           throw new InvalidOperationException("InvalidOperation_NoValue");
         return value;
       }
+    }
+    
+    void ISerializationCallbackReceiver.OnBeforeSerialize()
+    {
+      if (!HasValue)
+        value = default;
+    }
+
+    void ISerializationCallbackReceiver.OnAfterDeserialize()
+    {
+      
     }
 
     public T GetValueOrDefault() => value;

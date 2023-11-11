@@ -15,30 +15,14 @@ namespace GameGC.Collections.Editor
         {
             var valueProperty = property.FindPropertyRelative("value");
             
-           //r rect = new Rect((position.x+ position.width) - 18, position.y, 18, Mathf.Min(position.height,18));
-           // (GUI.Button(rect,"X"))
-           //
-           //  Type type = null;
-           //  foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
-           //  {
-           //      type = assembly.GetType(valueProperty.type);
-           //      if(type!=null) break;
-           //  }
-           //  
-           //  
-           // //var field = type.GetField(valueProperty.propertyPath,BindingFlags.Instance);
-           // //field.SetValue(valueProperty.serializedObject.targetObject,null);
-
-           // //var member = type.GetMember(valueProperty.propertyPath.Substring(0, property.propertyPath.LastIndexOf('.')));
-           // //member.GetValue()
-           // //
-           // //property.serializedObject.ApplyModifiedProperties();
-           //
-           //
-            
+            EditorGUI.BeginChangeCheck();
             EditorGUI.PropertyField(position,valueProperty , label, true);
+            if (EditorGUI.EndChangeCheck())
+            {
+                property.FindPropertyRelative("HasValue").boolValue = true;
+            }
 
-           
+            valueProperty.serializedObject.ApplyModifiedProperties();
         }
     }
 }
