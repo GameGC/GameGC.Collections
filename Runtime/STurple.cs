@@ -23,9 +23,9 @@ namespace GameGC.Collections
         public T1 Item1;
         public T2 Item2;
         public T3 Item3;
-        public T3 Item4;
+        public T4 Item4;
 
-        public STurple(T1 item1, T2 item2, T3 item3, T3 item4)
+        public STurple(T1 item1, T2 item2, T3 item3, T4 item4)
         {
             Item1 = item1;
             Item2 = item2;
@@ -40,10 +40,10 @@ namespace GameGC.Collections
         public T1 Item1;
         public T2 Item2;
         public T3 Item3;
-        public T3 Item4;
-        public T3 Item5;
+        public T4 Item4;
+        public T5 Item5;
 
-        public STurple(T1 item1, T2 item2, T3 item3, T3 item4, T3 item5)
+        public STurple(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5)
         {
             Item1 = item1;
             Item2 = item2;
