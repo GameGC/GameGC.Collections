@@ -11,12 +11,13 @@ using Random = System.Random;
 
 namespace GameGC.Collections
 {
-    interface IUnique
+    interface ITypeInfo
     {
-        public void ValidateUnique();
+        Type TKey { get; }
+        Type TValue { get; }
     }
     [Serializable]
-    public class SDictionary<TKey,TValue> : Dictionary<TKey, TValue>, ISerializationCallbackReceiver ,IUnique
+    public class SDictionary<TKey,TValue> : Dictionary<TKey, TValue>, ISerializationCallbackReceiver ,ITypeInfo
     {
         [SerializeField] private SKeyValuePair<TKey, TValue>[] _keyValuePairs;
 
@@ -144,5 +145,7 @@ namespace GameGC.Collections
             }
         }
 #endif
+        Type ITypeInfo.TKey => typeof(TKey);
+        Type ITypeInfo.TValue => typeof(TValue);
     }
 }

@@ -20,8 +20,9 @@ namespace GameGC.Collections.Editor
             EditorGUI.PropertyField(position,target , label, true);
             if (EditorGUI.EndChangeCheck())
             {
-                var dict = (IDictionary) GetProperty(property);
-                var type = dict.Keys.GetEnumerator().Current.GetType();
+                var dict = GetProperty(property) as ITypeInfo;
+                
+                var type = dict.TKey;
                 if (type.IsSubclassOf(typeof(Object)))
                 {
                     var controlID = GUIUtility.GetControlID(FocusType.Passive) + 100;
