@@ -71,9 +71,9 @@ namespace GameGC.Collections
             {
                 for (int i = 0; i < _keyValuePairs.Length; i++) 
                     Add(_keyValuePairs[i].Key, _keyValuePairs[i].Value);
+                _keyValuePairs = null;
             }
         
-            _keyValuePairs = null;
         }
 
         private async void DelayedSerialize()
@@ -81,6 +81,7 @@ namespace GameGC.Collections
             await Task.Delay(100);
             for (int i = 0; i < _keyValuePairs.Length; i++) 
                 Add(_keyValuePairs[i].Key, _keyValuePairs[i].Value);
+            _keyValuePairs = null;
         }
 
 #if UNITY_EDITOR
