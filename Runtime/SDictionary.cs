@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using UnityEngine;
+using Object = UnityEngine.Object;
 #if UNITY_EDITOR
 using System.Linq;
+using UnityEditor;
 using Random = System.Random;
 #endif
 
@@ -58,7 +60,16 @@ namespace GameGC.Collections
             Clear();
 
             for (int i = 0; i < _keyValuePairs.Length; i++)
+            {
+#if UNITY_EDITOR
+                if (_keyValuePairs[i].Key == null)
+                {
+                    EditorGUIUtility.ShowObjectPicker<Object>(null, true, "", 0);
+                    _keyValuePairs[i].Key = (TKey) (object)EditorGUIUtility.GetObjectPickerObject();
+                }
+#endif
                 Add(_keyValuePairs[i].Key, _keyValuePairs[i].Value);
+            }
 
             _keyValuePairs = null;
         }
