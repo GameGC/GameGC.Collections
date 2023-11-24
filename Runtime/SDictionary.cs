@@ -59,22 +59,18 @@ namespace GameGC.Collections
             
             Clear();
 
-            for (int i = 0; i < _keyValuePairs.Length; i++)
-            {
-#if UNITY_EDITOR
-                if (_keyValuePairs[i].Key == null)
-                {
-                    EditorGUIUtility.ShowObjectPicker<Object>(null, true, "", 0);
-                    _keyValuePairs[i].Key = (TKey) (object)EditorGUIUtility.GetObjectPickerObject();
-                }
-#endif
+            for (int i = 0; i < _keyValuePairs.Length; i++) 
                 Add(_keyValuePairs[i].Key, _keyValuePairs[i].Value);
-            }
 
             _keyValuePairs = null;
         }
 
 #if UNITY_EDITOR
+        private TKey PickObject()
+        {
+            EditorGUIUtility.ShowObjectPicker<Object>(null, true, "", 0);
+            return (TKey) (object)EditorGUIUtility.GetObjectPickerObject();
+        }
         private void ValidateUnique()
         {
             if(_keyValuePairs.Length<2) return;
@@ -87,7 +83,7 @@ namespace GameGC.Collections
                 while (first != last)
                 {
                     var type = typeof(TKey);
-                    var newKey = type == typeof(string)? (TKey)(object)"" :type.IsSubclassOf(typeof(UnityEngine.Object))? default:Activator.CreateInstance<TKey>();
+                    var newKey = type == typeof(string)? (TKey)(object)"" :type.IsSubclassOf(typeof(UnityEngine.Object))? PickObject():Activator.CreateInstance<TKey>();
 
                     var randomGen = new Random();
                         
