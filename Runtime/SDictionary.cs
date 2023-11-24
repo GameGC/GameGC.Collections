@@ -63,39 +63,14 @@ namespace GameGC.Collections
             
             Clear();
 
-            for (int i = 0; i < _keyValuePairs.Length; i++)
-            {
-                try
-                {
-                    Add(_keyValuePairs[i].Key, _keyValuePairs[i].Value);
-                }
-                catch (Exception e)
-                {
-                    // ignored
-                }
-            }
+            for (int i = 0; i < _keyValuePairs.Length; i++) 
+                Add(_keyValuePairs[i].Key, _keyValuePairs[i].Value);
 
             _keyValuePairs = null;
         }
 
 #if UNITY_EDITOR
-        private async System.Threading.Tasks.Task<TKey> PickObject()
-        {
-            var controlID = GUIUtility.GetControlID(FocusType.Passive) + 100;
-            EditorGUIUtility.ShowObjectPicker<Object>(null, true, "", controlID);
-
-            string commandName = null;
-            Event event_ = Event.current;
-            while (commandName != "ObjectSelectorUpdated" && commandName != "ObjectSelectorClosed")
-            {
-                commandName =event_.commandName;
-                event_.Use();
-                Event.PopEvent(event_);
-                await System.Threading.Tasks.Task.Delay(10);
-            }
-            return (TKey) (object)EditorGUIUtility.GetObjectPickerObject();
-        }
-        public async void ValidateUnique()
+        public void ValidateUnique()
         {
             if(_keyValuePairs.Length<2) return;
             var allkeys = _keyValuePairs.Select(k => k.Key).ToList();
@@ -107,7 +82,11 @@ namespace GameGC.Collections
                 while (first != last)
                 {
                     var type = typeof(TKey);
-                    var newKey = type == typeof(string)? (TKey)(object)"" :type.IsSubclassOf(typeof(UnityEngine.Object))?await PickObject():Activator.CreateInstance<TKey>();
+                    if (type.IsSubclassOf(typeof(UnityEngine.Object)))
+                    {
+                        return;
+                    }
+                    var newKey = type == typeof(string)? (TKey)(object)"" :Activator.CreateInstance<TKey>();
 
                     var randomGen = new Random();
                         

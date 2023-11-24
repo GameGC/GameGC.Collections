@@ -3,6 +3,7 @@ using System.Collections;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace GameGC.Collections.Editor
 {
@@ -19,7 +20,20 @@ namespace GameGC.Collections.Editor
             EditorGUI.PropertyField(position,target , label, true);
             if (EditorGUI.EndChangeCheck())
             {
-                ((IUnique) GetProperty(property)).ValidateUnique();
+                var dict = (IDictionary) GetProperty(property);
+                var type = dict.Keys.GetEnumerator().Current.GetType();
+                if (type.IsSubclassOf(typeof(Object)))
+                {
+                    var controlID = GUIUtility.GetControlID(FocusType.Passive) + 100;
+                    EditorGUIUtility.ShowObjectPicker<Object>(null, true, "", controlID);
+
+                    string commandName = Event.current.commandName;
+                    if (commandName is "ObjectSelectorUpdated" or "ObjectSelectorClosed")
+                    {
+                       
+                    }
+
+                }
             }
         }
 
