@@ -34,10 +34,10 @@ namespace GameGC.Collections.Editor
             if (commandName is "ObjectSelectorUpdated" or "ObjectSelectorClosed")
             {
                 var info = GetProperty(property) as ITypeInfo;
-                var keys = GetProperty(target) as object[];
+                var keys = GetProperty(target) as Array;
                 var onstruc = typeof(SKeyValuePair<,>).MakeGenericType(new[] {info.TKey, info.TValue});
                 
-                Array.Resize(ref keys,keys.Length+1);
+                Resize(ref keys,keys.Length+1);
                 keys.SetValue(Activator.CreateInstance(onstruc),keys.Length-1);
                 
                 Debug.Log(commandName);
@@ -47,6 +47,12 @@ namespace GameGC.Collections.Editor
             }
         }
 
+        static void Resize(ref Array array, int newSize) {        
+            Type elementType = array.GetType().GetElementType();
+            Array newArray = Array.CreateInstance(elementType, newSize);
+            Array.Copy(array, newArray, Math.Min(array.Length, newArray.Length));
+            array = newArray;
+        }
         private static object GetProperty(SerializedProperty prop)
         {
             var path = prop.propertyPath.Replace(".Array.data[", "[");
