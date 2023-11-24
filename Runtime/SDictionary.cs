@@ -65,10 +65,12 @@ namespace GameGC.Collections
 
             if (typeof(TKey).IsSubclassOf(typeof(Object)))
             {
+                Debug.Log("g1");
                 DelayedSerialize();
             }
             else
             {
+                Debug.Log("g");
                 for (int i = 0; i < _keyValuePairs.Length; i++) 
                     Add(_keyValuePairs[i].Key, _keyValuePairs[i].Value);
                 _keyValuePairs = null;
