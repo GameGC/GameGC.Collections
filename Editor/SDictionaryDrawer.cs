@@ -33,6 +33,14 @@ namespace GameGC.Collections.Editor
             string commandName = Event.current.commandName;
             if (commandName is "ObjectSelectorUpdated" or "ObjectSelectorClosed")
             {
+                var dict = GetProperty(property) as IDictionary;
+                dict.Add(EditorGUIUtility.GetObjectPickerObject(),null);
+                
+                var info = GetProperty(property) as ITypeInfo;
+                object[] keys = GetProperty(target) as object[];
+                var onstruc = typeof(SKeyValuePair<,>).GetConstructor(new[] {info.TKey, info.TValue}).Invoke(null, null);
+                ArrayUtility.Add(ref keys,(object)onstruc);
+                
                 Debug.Log(commandName);
                 target.InsertArrayElementAtIndex(target.arraySize-1);
                 target.GetArrayElementAtIndex(target.arraySize - 1).FindPropertyRelative("Key")
