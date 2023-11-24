@@ -57,9 +57,9 @@ namespace GameGC.Collections
         /// </summary>
         public void OnAfterDeserialize()
         {
-//#if UNITY_EDITOR
-//            ValidateUnique();
-//#endif
+#if UNITY_EDITOR
+            ValidateUnique();
+#endif
             
             Clear();
 
