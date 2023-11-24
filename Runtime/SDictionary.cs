@@ -70,12 +70,20 @@ namespace GameGC.Collections
         }
 
 #if UNITY_EDITOR
-        private TKey PickObject()
+        private async System.Threading.Tasks.Task<TKey> PickObject()
         {
-            EditorGUIUtility.ShowObjectPicker<Object>(null, true, "", 0);
+            var controlID = GUIUtility.GetControlID(FocusType.Passive) + 100;
+            EditorGUIUtility.ShowObjectPicker<Object>(null, true, "", controlID);
+
+            string commandName = null;
+            while (commandName != "ObjectSelectorUpdated" && commandName != "ObjectSelectorClosed")
+            {
+                commandName = Event.current.commandName;
+                await System.Threading.Tasks.Task.Delay(10);
+            }
             return (TKey) (object)EditorGUIUtility.GetObjectPickerObject();
         }
-        public void ValidateUnique()
+        public async void ValidateUnique()
         {
             if(_keyValuePairs.Length<2) return;
             var allkeys = _keyValuePairs.Select(k => k.Key).ToList();
@@ -87,7 +95,7 @@ namespace GameGC.Collections
                 while (first != last)
                 {
                     var type = typeof(TKey);
-                    var newKey = type == typeof(string)? (TKey)(object)"" :type.IsSubclassOf(typeof(UnityEngine.Object))? PickObject():Activator.CreateInstance<TKey>();
+                    var newKey = type == typeof(string)? (TKey)(object)"" :type.IsSubclassOf(typeof(UnityEngine.Object))?await PickObject():Activator.CreateInstance<TKey>();
 
                     var randomGen = new Random();
                         
