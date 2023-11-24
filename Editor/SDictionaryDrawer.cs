@@ -43,14 +43,14 @@ namespace GameGC.Collections.Editor
                 Debug.Log(instance);
                 Debug.Log(   instance.GetType().GetField("Key",BindingFlags.Instance| BindingFlags.Public).GetValue(instance));
                 Debug.Log(keys.Length);
-
-                var dict = GetProperty(property) as IDictionary;
-                dict.Add(EditorGUIUtility.GetObjectPickerObject(),null);
                     
                 keys.SetValue(instance,keys.Length-1);
                 
                 info.GetType().GetField("_keyValuePairs", BindingFlags.Instance| BindingFlags.NonPublic)
                     .SetValue(info,keys);
+                
+                var dict = GetProperty(property) as IDictionary;
+                dict.Add(EditorGUIUtility.GetObjectPickerObject(),null);
                 Debug.Log(commandName);
                 //target.InsertArrayElementAtIndex(target.arraySize-1);
                 //target.GetArrayElementAtIndex(target.arraySize - 1).FindPropertyRelative("Key")
