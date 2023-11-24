@@ -26,13 +26,14 @@ namespace GameGC.Collections.Editor
                 if (type.IsSubclassOf(typeof(Object)))
                 {
                     var controlID = GUIUtility.GetControlID(FocusType.Passive) + 100;
-                    EditorGUIUtility.ShowObjectPicker<Object>(null, true, $"t:{dict.TKey}", controlID);
+                    EditorGUIUtility.ShowObjectPicker<Object>(null, true, $"t:{dict.TKey.Name}", controlID);
                 }
             }
             
             string commandName = Event.current.commandName;
             if (commandName is "ObjectSelectorUpdated" or "ObjectSelectorClosed")
             {
+                Debug.Log(commandName);
                 target.InsertArrayElementAtIndex(target.arraySize-1);
                 target.GetArrayElementAtIndex(target.arraySize - 1).FindPropertyRelative("Key")
                     .objectReferenceValue = EditorGUIUtility.GetObjectPickerObject();
