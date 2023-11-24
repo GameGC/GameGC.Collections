@@ -38,8 +38,9 @@ namespace GameGC.Collections.Editor
                 
                 var info = GetProperty(property) as ITypeInfo;
                 object[] keys = GetProperty(target) as object[];
-                var onstruc = typeof(SKeyValuePair<,>).GetConstructor(new[] {info.TKey, info.TValue}).Invoke(null, null);
-                ArrayUtility.Add(ref keys,(object)onstruc);
+                var onstruc = typeof(SKeyValuePair<,>).MakeGenericType(new[] {info.TKey, info.TValue})
+                
+                ArrayUtility.Add(ref keys,Activator.CreateInstance(onstruc));
                 
                 Debug.Log(commandName);
                 target.InsertArrayElementAtIndex(target.arraySize-1);
