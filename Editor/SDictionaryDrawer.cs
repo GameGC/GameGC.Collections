@@ -40,13 +40,13 @@ namespace GameGC.Collections.Editor
 
                  var keys = GetProperty(target) as Array;
                  var onstruc = typeof(SKeyValuePair<,>).MakeGenericType(new[] {info.TKey, info.TValue});
-                 
+                 Debug.Log(keys.Length);
+
                  Resize(ref keys,keys.Length+1);
                  var instance = Activator.CreateInstance(onstruc);
                  instance.GetType().GetField("Key",BindingFlags.Instance| BindingFlags.Public).SetValue(instance,EditorGUIUtility.GetObjectPickerObject());
                  Debug.Log(instance);
                  Debug.Log(   instance.GetType().GetField("Key",BindingFlags.Instance| BindingFlags.Public).GetValue(instance));
-                 Debug.Log(keys.Length);
                      
                  keys.SetValue(instance,keys.Length-1);
                  
