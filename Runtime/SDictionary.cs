@@ -71,8 +71,8 @@ namespace GameGC.Collections
 
             for (var i = 0; i < allkeys.Count; i++)
             {
-                int first = allkeys.FindIndex( k => k.Equals(allkeys[i]));
-                int last  = allkeys.FindLastIndex(k => k.Equals(allkeys[i]));
+                int first = allkeys.IndexOf( allkeys[i]);
+                int last  = allkeys.LastIndexOf(allkeys[i]);
                 while (first != last)
                 {
                     var type = typeof(TKey);
@@ -128,8 +128,8 @@ namespace GameGC.Collections
                     allkeys[index] = newKey;
                     
                     
-                    first = allkeys.FindIndex( k => k.Equals(allkeys[i]));
-                    last = allkeys.FindLastIndex(k => k.Equals(allkeys[i]));
+                    first = allkeys.IndexOf( allkeys[i]);
+                    last  = allkeys.LastIndexOf(allkeys[i]);
                 }
             }
         }
