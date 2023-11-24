@@ -40,10 +40,11 @@ namespace GameGC.Collections.Editor
                 Resize(ref keys,keys.Length+1);
                 keys.SetValue(Activator.CreateInstance(onstruc),keys.Length-1);
                 
+                property.serializedObject.Update();
                 Debug.Log(commandName);
-                target.InsertArrayElementAtIndex(target.arraySize-1);
-                target.GetArrayElementAtIndex(target.arraySize - 1).FindPropertyRelative("Key")
-                    .objectReferenceValue = EditorGUIUtility.GetObjectPickerObject();
+                //target.InsertArrayElementAtIndex(target.arraySize-1);
+                //target.GetArrayElementAtIndex(target.arraySize - 1).FindPropertyRelative("Key")
+                //    .objectReferenceValue = EditorGUIUtility.GetObjectPickerObject();
             }
         }
 
