@@ -12,7 +12,7 @@ namespace GameGC.Collections.Editor
     {
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label) => EditorGUI.GetPropertyHeight(property.FindPropertyRelative("_keyValuePairs"), label,true);
 
-        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+        public override async void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             var target = property.FindPropertyRelative("_keyValuePairs");
             
@@ -34,23 +34,28 @@ namespace GameGC.Collections.Editor
             if (commandName is "ObjectSelectorUpdated")
             {
                 var info = GetProperty(property) as ITypeInfo;
-                var keys = GetProperty(target) as Array;
-                var onstruc = typeof(SKeyValuePair<,>).MakeGenericType(new[] {info.TKey, info.TValue});
-                
-                Resize(ref keys,keys.Length+1);
-                var instance = Activator.CreateInstance(onstruc);
-                instance.GetType().GetField("Key",BindingFlags.Instance| BindingFlags.Public).SetValue(instance,EditorGUIUtility.GetObjectPickerObject());
-                Debug.Log(instance);
-                Debug.Log(   instance.GetType().GetField("Key",BindingFlags.Instance| BindingFlags.Public).GetValue(instance));
-                Debug.Log(keys.Length);
-                    
-                keys.SetValue(instance,keys.Length-1);
-                
-                info.GetType().GetField("_keyValuePairs", BindingFlags.Instance| BindingFlags.NonPublic)
-                    .SetValue(info,keys);
+                var obje = EditorGUIUtility.GetObjectPickerObject();
+              //  var keys = GetProperty(target) as Array;
+                //var onstruc = typeof(SKeyValuePair<,>).MakeGenericType(new[] {info.TKey, info.TValue});
+                //
+                //Resize(ref keys,keys.Length+1);
+                //var instance = Activator.CreateInstance(onstruc);
+                //instance.GetType().GetField("Key",BindingFlags.Instance| BindingFlags.Public).SetValue(instance,EditorGUIUtility.GetObjectPickerObject());
+                //Debug.Log(instance);
+                //Debug.Log(   instance.GetType().GetField("Key",BindingFlags.Instance| BindingFlags.Public).GetValue(instance));
+                //Debug.Log(keys.Length);
+                //    
+                //keys.SetValue(instance,keys.Length-1);
+                //
+                //info.GetType().GetField("_keyValuePairs", BindingFlags.Instance| BindingFlags.NonPublic)
+                //    .SetValue(info,keys);
+
+                await info.GetDict();
                 
                 var dict = GetProperty(property) as IDictionary;
-                dict.Add(EditorGUIUtility.GetObjectPickerObject(),null);
+                dict.Add(obje,null);
+                
+                info.OnBeforeSerialize();
                 Debug.Log(commandName);
                 //target.InsertArrayElementAtIndex(target.arraySize-1);
                 //target.GetArrayElementAtIndex(target.arraySize - 1).FindPropertyRelative("Key")

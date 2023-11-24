@@ -15,6 +15,9 @@ namespace GameGC.Collections
     {
         Type TKey { get; }
         Type TValue { get; }
+
+        Task GetDict();
+        void OnBeforeSerialize();
     }
     [Serializable]
     public class SDictionary<TKey,TValue> : Dictionary<TKey, TValue>, ISerializationCallbackReceiver ,ITypeInfo
@@ -78,7 +81,7 @@ namespace GameGC.Collections
         
         }
 
-        private async void DelayedSerialize()
+        private async Task DelayedSerialize()
         {
             await Task.Delay(100);
             for (int i = 0; i < _keyValuePairs.Length; i++) 
@@ -87,6 +90,10 @@ namespace GameGC.Collections
         }
 
 #if UNITY_EDITOR
+        public async Task GetDict()
+        {
+            await DelayedSerialize();
+        }
         public void ValidateUnique()
         {
             if(_keyValuePairs.Length<2) return;
