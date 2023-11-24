@@ -34,10 +34,11 @@ namespace GameGC.Collections.Editor
             if (commandName is "ObjectSelectorUpdated" or "ObjectSelectorClosed")
             {
                 var info = GetProperty(property) as ITypeInfo;
-                object[] keys = GetProperty(target) as object[];
+                var keys = GetProperty(target) as Array;
                 var onstruc = typeof(SKeyValuePair<,>).MakeGenericType(new[] {info.TKey, info.TValue});
                 
-                ArrayUtility.Add(ref keys,Activator.CreateInstance(onstruc));
+                Array.Resize<>(ref keys,keys.Length+1);
+                keys.SetValue(Activator.CreateInstance(onstruc),keys.Length-1);
                 
                 Debug.Log(commandName);
                 target.InsertArrayElementAtIndex(target.arraySize-1);
