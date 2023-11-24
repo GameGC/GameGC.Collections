@@ -31,7 +31,7 @@ namespace GameGC.Collections.Editor
             }
             
             string commandName = Event.current.commandName;
-            if (commandName is "ObjectSelectorUpdated" or "ObjectSelectorClosed")
+            if (commandName is "ObjectSelectorUpdated")
             {
                 var info = GetProperty(property) as ITypeInfo;
                 var keys = GetProperty(target) as Array;
