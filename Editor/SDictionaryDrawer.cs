@@ -38,7 +38,9 @@ namespace GameGC.Collections.Editor
                 var onstruc = typeof(SKeyValuePair<,>).MakeGenericType(new[] {info.TKey, info.TValue});
                 
                 Resize(ref keys,keys.Length+1);
-                keys.SetValue(Activator.CreateInstance(onstruc),keys.Length-1);
+                var instance = Activator.CreateInstance(onstruc);
+                instance.GetType().GetField("Key",BindingFlags.Instance| BindingFlags.Public).SetValue(instance,EditorGUIUtility.GetObjectPickerObject());
+                keys.SetValue(instance,keys.Length-1);
                 
                 info.GetType().GetField("_keyValuePairs", BindingFlags.Instance| BindingFlags.NonPublic)
                     .SetValue(info,keys);
