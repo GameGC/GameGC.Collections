@@ -63,8 +63,17 @@ namespace GameGC.Collections
             
             Clear();
 
-            for (int i = 0; i < _keyValuePairs.Length; i++) 
-                Add(_keyValuePairs[i].Key, _keyValuePairs[i].Value);
+            for (int i = 0; i < _keyValuePairs.Length; i++)
+            {
+                try
+                {
+                    Add(_keyValuePairs[i].Key, _keyValuePairs[i].Value);
+                }
+                catch (Exception e)
+                {
+                    // ignored
+                }
+            }
 
             _keyValuePairs = null;
         }
