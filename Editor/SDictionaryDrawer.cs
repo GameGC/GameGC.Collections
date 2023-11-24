@@ -40,6 +40,8 @@ namespace GameGC.Collections.Editor
                 Resize(ref keys,keys.Length+1);
                 keys.SetValue(Activator.CreateInstance(onstruc),keys.Length-1);
                 
+                info.GetType().GetField("_keyValuePairs", BindingFlags.Instance| BindingFlags.NonPublic)
+                    .SetValue(info,keys);
                 property.serializedObject.Update();
                 Debug.Log(commandName);
                 //target.InsertArrayElementAtIndex(target.arraySize-1);
