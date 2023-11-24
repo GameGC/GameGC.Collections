@@ -1,7 +1,11 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using Codice.CM.Common.Serialization;
 using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
 #if UNITY_EDITOR
 using System.Linq;
@@ -36,7 +40,6 @@ namespace GameGC.Collections
             }
         }
 
-
         /// <summary>
         /// OnBeforeSerialize implementation.
         /// </summary>
@@ -64,10 +67,24 @@ namespace GameGC.Collections
             
             Clear();
 
+            if (typeof(TKey).IsSubclassOf(typeof(Object)))
+            {
+                DelayedSerialize();
+            }
+            else
+            {
+                for (int i = 0; i < _keyValuePairs.Length; i++) 
+                    Add(_keyValuePairs[i].Key, _keyValuePairs[i].Value);
+            }
+        
+            _keyValuePairs = null;
+        }
+
+        private async void DelayedSerialize()
+        {
+            await Task.Delay(100);
             for (int i = 0; i < _keyValuePairs.Length; i++) 
                 Add(_keyValuePairs[i].Key, _keyValuePairs[i].Value);
-
-            _keyValuePairs = null;
         }
 
 #if UNITY_EDITOR
