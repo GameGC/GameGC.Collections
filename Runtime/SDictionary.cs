@@ -76,7 +76,7 @@ namespace GameGC.Collections
                 while (first != last)
                 {
                     var type = typeof(TKey);
-                    var newKey = type == typeof(string)? (TKey)(object)"" :Activator.CreateInstance<TKey>();
+                    var newKey = type == typeof(string)? (TKey)(object)"" :type.IsSubclassOf(typeof(UnityEngine.Object))? default:Activator.CreateInstance<TKey>();
 
                     var randomGen = new Random();
                         
