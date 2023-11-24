@@ -85,9 +85,12 @@ namespace GameGC.Collections
             EditorGUIUtility.ShowObjectPicker<Object>(null, true, "", controlID);
 
             string commandName = null;
+            Event event_ = Event.current;
             while (commandName != "ObjectSelectorUpdated" && commandName != "ObjectSelectorClosed")
             {
-                commandName = Event.current.commandName;
+                commandName =event_.commandName;
+                event_.Use();
+                Event.PopEvent(event_);
                 await System.Threading.Tasks.Task.Delay(10);
             }
             return (TKey) (object)EditorGUIUtility.GetObjectPickerObject();
