@@ -35,31 +35,28 @@ namespace GameGC.Collections.Editor
             {
                 var info = GetProperty(property) as ITypeInfo;
                 var obje = EditorGUIUtility.GetObjectPickerObject();
-              //  var keys = GetProperty(target) as Array;
-                //var onstruc = typeof(SKeyValuePair<,>).MakeGenericType(new[] {info.TKey, info.TValue});
-                //
-                //Resize(ref keys,keys.Length+1);
-                //var instance = Activator.CreateInstance(onstruc);
-                //instance.GetType().GetField("Key",BindingFlags.Instance| BindingFlags.Public).SetValue(instance,EditorGUIUtility.GetObjectPickerObject());
-                //Debug.Log(instance);
-                //Debug.Log(   instance.GetType().GetField("Key",BindingFlags.Instance| BindingFlags.Public).GetValue(instance));
-                //Debug.Log(keys.Length);
-                //    
-                //keys.SetValue(instance,keys.Length-1);
-                //
-                //info.GetType().GetField("_keyValuePairs", BindingFlags.Instance| BindingFlags.NonPublic)
-                //    .SetValue(info,keys);
-
-                await info.GetDict();
-                var dict = GetProperty(property) as IDictionary;
-                Debug.Log(dict.Count);
-
-                dict.Add(obje,null);
                 
                 info.OnBeforeSerialize();
-                var keys = GetProperty(target) as Array;
-                Debug.Log(keys.Length);
-                property.serializedObject.Update();
+
+                 var keys = GetProperty(target) as Array;
+                 var onstruc = typeof(SKeyValuePair<,>).MakeGenericType(new[] {info.TKey, info.TValue});
+                 
+                 Resize(ref keys,keys.Length+1);
+                 var instance = Activator.CreateInstance(onstruc);
+                 instance.GetType().GetField("Key",BindingFlags.Instance| BindingFlags.Public).SetValue(instance,EditorGUIUtility.GetObjectPickerObject());
+                 Debug.Log(instance);
+                 Debug.Log(   instance.GetType().GetField("Key",BindingFlags.Instance| BindingFlags.Public).GetValue(instance));
+                 Debug.Log(keys.Length);
+                     
+                 keys.SetValue(instance,keys.Length-1);
+                 
+                 Debug.Log(keys.Length);
+                 
+                 info.GetType().GetField("_keyValuePairs", BindingFlags.Instance| BindingFlags.NonPublic)
+                     .SetValue(info,keys);
+
+                 info.GetDict();
+
                 
                 Debug.Log(commandName);
                 //target.InsertArrayElementAtIndex(target.arraySize-1);
