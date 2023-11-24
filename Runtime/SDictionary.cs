@@ -11,8 +11,12 @@ using Random = System.Random;
 
 namespace GameGC.Collections
 {
+    interface IUnique
+    {
+        public void ValidateUnique();
+    }
     [Serializable]
-    public class SDictionary<TKey,TValue> : Dictionary<TKey, TValue>, ISerializationCallbackReceiver 
+    public class SDictionary<TKey,TValue> : Dictionary<TKey, TValue>, ISerializationCallbackReceiver ,IUnique
     {
         [SerializeField] private SKeyValuePair<TKey, TValue>[] _keyValuePairs;
 
@@ -53,9 +57,9 @@ namespace GameGC.Collections
         /// </summary>
         public void OnAfterDeserialize()
         {
-#if UNITY_EDITOR
-            ValidateUnique();
-#endif
+//#if UNITY_EDITOR
+//            ValidateUnique();
+//#endif
             
             Clear();
 
@@ -71,7 +75,7 @@ namespace GameGC.Collections
             EditorGUIUtility.ShowObjectPicker<Object>(null, true, "", 0);
             return (TKey) (object)EditorGUIUtility.GetObjectPickerObject();
         }
-        private void ValidateUnique()
+        public void ValidateUnique()
         {
             if(_keyValuePairs.Length<2) return;
             var allkeys = _keyValuePairs.Select(k => k.Key).ToList();

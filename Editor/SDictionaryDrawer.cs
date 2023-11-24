@@ -12,7 +12,12 @@ namespace GameGC.Collections.Editor
         {
             var target = property.FindPropertyRelative("_keyValuePairs");
             
+            EditorGUI.BeginChangeCheck();
             EditorGUI.PropertyField(position,target , label, true);
+            if (EditorGUI.EndChangeCheck())
+            {
+                ((IUnique) (property.managedReferenceValue)).ValidateUnique();
+            }
         }
     }
 }
