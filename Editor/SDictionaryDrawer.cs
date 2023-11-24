@@ -36,7 +36,7 @@ namespace GameGC.Collections.Editor
                 var info = GetProperty(property) as ITypeInfo;
                 var obje = EditorGUIUtility.GetObjectPickerObject();
                 
-                info.OnBeforeSerialize();
+                //info.OnBeforeSerialize();
 
                  var keys = GetProperty(target) as Array;
                  var onstruc = typeof(SKeyValuePair<,>).MakeGenericType(new[] {info.TKey, info.TValue});
