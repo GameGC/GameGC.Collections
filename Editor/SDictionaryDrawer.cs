@@ -33,9 +33,6 @@ namespace GameGC.Collections.Editor
             string commandName = Event.current.commandName;
             if (commandName is "ObjectSelectorUpdated" or "ObjectSelectorClosed")
             {
-                var dict = GetProperty(property) as IDictionary;
-                dict.Add(EditorGUIUtility.GetObjectPickerObject(),null);
-                
                 var info = GetProperty(property) as ITypeInfo;
                 object[] keys = GetProperty(target) as object[];
                 var onstruc = typeof(SKeyValuePair<,>).MakeGenericType(new[] {info.TKey, info.TValue});
