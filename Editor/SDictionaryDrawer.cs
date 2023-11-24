@@ -51,11 +51,16 @@ namespace GameGC.Collections.Editor
                 //    .SetValue(info,keys);
 
                 await info.GetDict();
-                
                 var dict = GetProperty(property) as IDictionary;
+                Debug.Log(dict.Count);
+
                 dict.Add(obje,null);
                 
                 info.OnBeforeSerialize();
+                var keys = GetProperty(target) as Array;
+                Debug.Log(keys.Length);
+                property.serializedObject.Update();
+                
                 Debug.Log(commandName);
                 //target.InsertArrayElementAtIndex(target.arraySize-1);
                 //target.GetArrayElementAtIndex(target.arraySize - 1).FindPropertyRelative("Key")
