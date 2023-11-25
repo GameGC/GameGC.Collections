@@ -13,7 +13,7 @@ namespace GameGC.Collections
     [Serializable]
     public class SDictionary<TKey,TValue> : IDictionary<TKey, TValue>, ISerializationCallbackReceiver
     {
-        [SerializeField] private SKeyValuePair<TKey, TValue>[] _keyValuePairs;
+        [SerializeField] private SKeyValuePair<TKey, TValue>[] _keyValuePairs = Array.Empty<SKeyValuePair<TKey, TValue>>();
 
         private Dictionary<TKey, TValue> _temp;
         public SDictionary()
@@ -157,10 +157,10 @@ namespace GameGC.Collections
 
         public bool Remove(KeyValuePair<TKey, TValue> item) => Remove(item.Key);
 
-        public int Count => _temp?.Count ?? 0;
+        public int Count => _temp == null? 0: _temp.Count;
 
         public bool IsReadOnly => false;
-        public void Add(TKey key, TValue value) => _temp.Add(key,value);
+        public void Add(TKey key, TValue value) => _temp?.Add(key,value);
 
         public bool ContainsKey(TKey key) => _temp.ContainsKey(key);
 
