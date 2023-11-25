@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using UnityEngine;
@@ -11,16 +10,15 @@ using Random = System.Random;
 namespace GameGC.Collections
 {
     [Serializable]
-    public class SDictionary<TKey,TValue> : IDictionary<TKey, TValue>, ISerializationCallbackReceiver
+    public class SDictionary<TKey,TValue> : Dictionary<TKey, TValue>, ISerializationCallbackReceiver 
     {
-        [SerializeField] private SKeyValuePair<TKey, TValue>[] _keyValuePairs = Array.Empty<SKeyValuePair<TKey, TValue>>();
+        [SerializeField] private SKeyValuePair<TKey, TValue>[] _keyValuePairs;
 
-        private Dictionary<TKey, TValue> _temp;
         public SDictionary()
         {
         }
 
-        public SDictionary([NotNull] IDictionary<TKey, TValue> dictionary)
+        public SDictionary([NotNull] IDictionary<TKey, TValue> dictionary) : base(dictionary)
         {
             _keyValuePairs = new SKeyValuePair<TKey, TValue>[dictionary.Count];
             int i = 0;
@@ -30,6 +28,7 @@ namespace GameGC.Collections
                 i++;
             }
         }
+
 
         /// <summary>
         /// OnBeforeSerialize implementation.
@@ -58,15 +57,14 @@ namespace GameGC.Collections
             
             Clear();
 
-            _temp = new Dictionary<TKey, TValue>(_keyValuePairs as IEnumerable<KeyValuePair<TKey,TValue>>);
-            //for (int i = 0; i < _keyValuePairs.Length; i++)
-            //    Add(_keyValuePairs[i].Key, _keyValuePairs[i].Value);
-            _keyValuePairs = null;
+            for (int i = 0; i < _keyValuePairs.Length; i++)
+                Add(_keyValuePairs[i].Key, _keyValuePairs[i].Value);
 
+            _keyValuePairs = null;
         }
 
 #if UNITY_EDITOR
-        public void ValidateUnique()
+        private void ValidateUnique()
         {
             if(_keyValuePairs.Length<2) return;
             var allkeys = _keyValuePairs.Select(k => k.Key).ToList();
@@ -78,11 +76,7 @@ namespace GameGC.Collections
                 while (first != last)
                 {
                     var type = typeof(TKey);
-                    if (type.IsSubclassOf(typeof(UnityEngine.Object)))
-                    {
-                        throw new Exception("This type no support base classes of Object as key");
-                    }
-                    var newKey = type == typeof(string)? (TKey)(object)"" :Activator.CreateInstance<TKey>();
+                    var newKey = type == typeof(string)? (TKey)(object)"" :type.IsSubclassOf(typeof(UnityEngine.Object))? default:Activator.CreateInstance<TKey>();
 
                     var randomGen = new Random();
                         
@@ -140,41 +134,5 @@ namespace GameGC.Collections
             }
         }
 #endif
-        public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator() => _temp.GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-        public void Add(KeyValuePair<TKey, TValue> item) => Add(item.Key,item.Value);
-
-        public void Clear() => _temp?.Clear();
-
-        public bool Contains(KeyValuePair<TKey, TValue> item) => _temp.ContainsKey(item.Key);
-
-        public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Remove(KeyValuePair<TKey, TValue> item) => Remove(item.Key);
-
-        public int Count => _temp == null? 0: _temp.Count;
-
-        public bool IsReadOnly => false;
-        public void Add(TKey key, TValue value) => _temp?.Add(key,value);
-
-        public bool ContainsKey(TKey key) => _temp.ContainsKey(key);
-
-        public bool Remove(TKey key) => _temp.Remove(key);
-
-        public bool TryGetValue(TKey key, out TValue value) => _temp.TryGetValue(key, out value);
-
-        public TValue this[TKey key]
-        {
-            get => _temp[key];
-            set => _temp[key] = value;
-        }
-
-        public ICollection<TKey> Keys => _temp?.Keys;
-        public ICollection<TValue> Values => _temp?.Values;
     }
 }
