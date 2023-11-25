@@ -157,7 +157,8 @@ namespace GameGC.Collections
 
         public bool Remove(KeyValuePair<TKey, TValue> item) => Remove(item.Key);
 
-        public int Count => _temp.Count;
+        public int Count => _temp?.Count ?? 0;
+
         public bool IsReadOnly => false;
         public void Add(TKey key, TValue value) => _temp.Add(key,value);
 
@@ -173,7 +174,7 @@ namespace GameGC.Collections
             set => _temp[key] = value;
         }
 
-        public ICollection<TKey> Keys => _temp.Keys;
-        public ICollection<TValue> Values => _temp.Values;
+        public ICollection<TKey> Keys => _temp?.Keys;
+        public ICollection<TValue> Values => _temp?.Values;
     }
 }
