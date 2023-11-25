@@ -146,7 +146,7 @@ namespace GameGC.Collections
 
         public void Add(KeyValuePair<TKey, TValue> item) => Add(item.Key,item.Value);
 
-        public void Clear() => _temp.Clear();
+        public void Clear() => _temp?.Clear();
 
         public bool Contains(KeyValuePair<TKey, TValue> item) => _temp.ContainsKey(item.Key);
 
