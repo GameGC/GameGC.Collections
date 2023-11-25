@@ -1,9 +1,8 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using JetBrains.Annotations;
 using UnityEngine;
-using Object = UnityEngine.Object;
 #if UNITY_EDITOR
 using System.Linq;
 using Random = System.Random;
@@ -11,24 +10,17 @@ using Random = System.Random;
 
 namespace GameGC.Collections
 {
-    interface ITypeInfo
-    {
-        Type TKey { get; }
-        Type TValue { get; }
-
-        Task GetDict();
-        void OnBeforeSerialize();
-    }
     [Serializable]
-    public class SDictionary<TKey,TValue> : Dictionary<TKey, TValue>, ISerializationCallbackReceiver ,ITypeInfo
+    public class SDictionary<TKey,TValue> : IDictionary<TKey, TValue>, ISerializationCallbackReceiver
     {
         [SerializeField] private SKeyValuePair<TKey, TValue>[] _keyValuePairs;
 
+        private Dictionary<TKey, TValue> _temp;
         public SDictionary()
         {
         }
 
-        public SDictionary([NotNull] IDictionary<TKey, TValue> dictionary) : base(dictionary)
+        public SDictionary([NotNull] IDictionary<TKey, TValue> dictionary)
         {
             _keyValuePairs = new SKeyValuePair<TKey, TValue>[dictionary.Count];
             int i = 0;
@@ -66,34 +58,14 @@ namespace GameGC.Collections
             
             Clear();
 
-            if (typeof(TKey).IsSubclassOf(typeof(Object)))
-            {
-                Debug.Log("g1");
-                DelayedSerialize();
-            }
-            else
-            {
-                Debug.Log("g");
-                for (int i = 0; i < _keyValuePairs.Length; i++) 
-                    Add(_keyValuePairs[i].Key, _keyValuePairs[i].Value);
-                _keyValuePairs = null;
-            }
-        
-        }
-
-        private async Task DelayedSerialize()
-        {
-            await Task.Delay(100);
-            for (int i = 0; i < _keyValuePairs.Length; i++) 
-                Add(_keyValuePairs[i].Key, _keyValuePairs[i].Value);
+            _temp = new Dictionary<TKey, TValue>(_keyValuePairs as IEnumerable<KeyValuePair<TKey,TValue>>);
+            //for (int i = 0; i < _keyValuePairs.Length; i++)
+            //    Add(_keyValuePairs[i].Key, _keyValuePairs[i].Value);
             _keyValuePairs = null;
+
         }
 
 #if UNITY_EDITOR
-        public async Task GetDict()
-        {
-            await DelayedSerialize();
-        }
         public void ValidateUnique()
         {
             if(_keyValuePairs.Length<2) return;
@@ -108,7 +80,7 @@ namespace GameGC.Collections
                     var type = typeof(TKey);
                     if (type.IsSubclassOf(typeof(UnityEngine.Object)))
                     {
-                        return;
+                        throw new Exception("This type no support base classes of Object as key");
                     }
                     var newKey = type == typeof(string)? (TKey)(object)"" :Activator.CreateInstance<TKey>();
 
@@ -168,7 +140,40 @@ namespace GameGC.Collections
             }
         }
 #endif
-        Type ITypeInfo.TKey => typeof(TKey);
-        Type ITypeInfo.TValue => typeof(TValue);
+        public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator() => _temp.GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+        public void Add(KeyValuePair<TKey, TValue> item) => Add(item.Key,item.Value);
+
+        public void Clear() => _temp.Clear();
+
+        public bool Contains(KeyValuePair<TKey, TValue> item) => _temp.ContainsKey(item.Key);
+
+        public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Remove(KeyValuePair<TKey, TValue> item) => Remove(item.Key);
+
+        public int Count => _temp.Count;
+        public bool IsReadOnly => false;
+        public void Add(TKey key, TValue value) => _temp.Add(key,value);
+
+        public bool ContainsKey(TKey key) => _temp.ContainsKey(key);
+
+        public bool Remove(TKey key) => _temp.Remove(key);
+
+        public bool TryGetValue(TKey key, out TValue value) => _temp.TryGetValue(key, out value);
+
+        public TValue this[TKey key]
+        {
+            get => _temp[key];
+            set => _temp[key] = value;
+        }
+
+        public ICollection<TKey> Keys => _temp.Keys;
+        public ICollection<TValue> Values => _temp.Values;
     }
 }
