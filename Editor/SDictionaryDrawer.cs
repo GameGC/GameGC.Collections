@@ -3,7 +3,6 @@ using System.Collections;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace GameGC.Collections.Editor
 {
