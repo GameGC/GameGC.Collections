@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
@@ -11,8 +12,18 @@ namespace GameGC.Collections.Editor
         private static Dictionary<string, ReorderableList> _lists = new();
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
-            if (_lists.TryGetValue(property.propertyPath,out var value))
-                return value.GetHeight()+10;
+            if (_lists.TryGetValue(property.propertyPath, out var value))
+            {
+                try
+                {
+                    return value.GetHeight();
+                }
+                catch (Exception e)
+                {
+                    _lists.Remove(property.propertyPath);
+                    return 0;
+                }
+            }
             return property.FindPropertyRelative("_keys").arraySize * 21f + 20f + 20f + 4f;
         }
 
